@@ -1,0 +1,10 @@
+# Activate MOLINFO functionalities
+MOLINFO STRUCTURE=/home/yk3019/comp-lab-class-2023/Week6/Inputs/dialaB/dialaBc.pdb
+# Compute the backbone dihedral angle phi, defined by atoms C-N-CA-C
+# you should use MOLINFO shortcuts
+phi: TORSION ATOMS=5,7,9,15
+# Compute the backbone dihedral angle psi, defined by atoms N-CA-C-N
+# here also you should to use MOLINFO shortcuts
+psi: TORSION ATOMS=7,9,15,17
+# Print both collective variables and the value of the bias potential on COLVAR file
+PRINT ARG=phi,psi FILE=COLVAR STRIDE=10
