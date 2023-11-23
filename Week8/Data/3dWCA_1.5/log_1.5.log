@@ -1,0 +1,104 @@
+LAMMPS (15 Sep 2022)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (src/comm.cpp:98)
+  using 1 OpenMP thread(s) per MPI task
+# 3d WCA system, random initial configuration
+
+#variable density equal 0.5
+variable initial_temperature equal 3.0
+variable final_temperature equal 0.1
+variable dt equal 0.01
+variable tau equal 100*${dt}
+variable tau equal 100*0.01
+variable thermo_time equal 50000*${dt}
+variable thermo_time equal 50000*0.01
+variable equil_steps equal 50000
+variable run_steps equal 100000
+
+units           lj
+atom_style      atomic
+dimension       3
+
+lattice         fcc ${density}
+lattice         fcc 1.5
+Lattice spacing in x,y,z = 1.3867225 1.3867225 1.3867225
+region          box block -4 4 -4 4 -4 4
+# number of atom types
+create_box      1 box
+Created orthogonal box = (-5.5468902 -5.5468902 -5.5468902) to (5.5468902 5.5468902 5.5468902)
+  3 by 1 by 1 MPI processor grid
+create_atoms    1 box
+Created 2048 atoms
+  using lattice units in orthogonal box = (-5.5468902 -5.5468902 -5.5468902) to (5.5468902 5.5468902 5.5468902)
+  create_atoms CPU = 0.000 seconds
+mass 1 1.0
+
+velocity all create ${initial_temperature} 12345
+velocity all create 3 12345
+
+pair_style      lj/cut 1.0
+#type_1 type_2 epsilon sigma cutoff
+pair_coeff      1 1 10.0 0.89089871814 1.0
+pair_modify shift yes
+
+timestep ${dt}
+timestep 0.01
+thermo ${thermo_time}
+thermo 500
+
+fix 1 all nvt temp ${initial_temperature} ${initial_temperature} ${tau}
+fix 1 all nvt temp 3 ${initial_temperature} ${tau}
+fix 1 all nvt temp 3 3 ${tau}
+fix 1 all nvt temp 3 3 1
+run ${equil_steps}
+run 50000
+Generated 0 of 0 mixed pair_coeff terms from geometric mixing rule
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 1.3
+  ghost atom cutoff = 1.3
+  binsize = 0.65, bins = 18 18 18
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/cut, perpetual
+      attributes: half, newton on
+      pair build: half/bin/atomonly/newton
+      stencil: half/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 3.112 | 3.113 | 3.114 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press     
+         0   3              0.9375         0              5.4353027      55.122803    
+       500   2.6887065      5.4983234      0              9.5294139      109.38389    
+      1000   2.9576055      6.0832948      0              10.517537      116.18552    
+      1500   3.0714955      6.1511109      0              10.756104      117.45405    
+      2000   2.9803018      6.0585519      0              10.526822      116.24639    
+      2500   2.9963996      5.8731884      0              10.365593      113.85661    
+      3000   3.0121392      5.9816661      0              10.497669      115.25028    
+      3500   3.0258787      6.0127576      0              10.549359      115.71699    
+      4000   3.0171972      5.9335223      0              10.457108      114.57888    
+      4500   3.0392762      5.9688668      0              10.525555      115.1258     
+      5000   3.0550019      6.0270968      0              10.607362      115.91443    
+      5500   3.0780479      6.1343231      0              10.74914       117.03113    
+      6000   3.0831941      6.0643466      0              10.68688       116.35158    
+      6500   3.1771613      5.9628827      0              10.726298      115.16337    
+      7000   3.0209073      6.1435382      0              10.672687      116.87627    
+      7500   3.046592       6.0975862      0              10.665243      116.67661    
+      8000   3.1431108      6.1385018      0              10.850866      117.169      
+      8500   3.0324905      6.0901246      0              10.636639      116.43224    
+      9000   3.0256118      6.0777982      0              10.614         116.60227    
+      9500   3.1045049      6.0996571      0              10.754141      116.57799    
+     10000   3.0839292      6.1416106      0              10.765246      116.929      
+     10500   3.0790031      5.8981573      0              10.514407      114.71307    
+     11000   3.1128706      6.1003024      0              10.767328      116.6235     
+     11500   3.0993036      6.0579624      0              10.704648      116.49974    
+     12000   3.0558879      6.0494784      0              10.631072      115.7331     
+     12500   3.1506071      6.0001173      0              10.72372       115.24799    
+     13000   3.1183608      6.0556478      0              10.730905      116.35289    
+     13500   3.1038152      5.9758245      0              10.629274      115.09422    
+     14000   3.102842       6.11163        0              10.76362       116.57479    
+     14500   3.1143572      6.0387104      0              10.707965      116.0973     
+     15000   3.0941933      6.0543155      0              10.693339      116.51138    
+     15500   3.0955268      6.0322525      0              10.673275      116.11642    
+     16000   3.0184052      6.1651162      0              10.690513      117.30889    
+     16500   3.122999       5.9790125      0              10.661224      115.20318    
+ERROR: Lost atoms: original 2048 current 559 (src/thermo.cpp:481)
+Last command: run ${equil_steps}
